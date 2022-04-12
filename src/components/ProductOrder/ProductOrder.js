@@ -27,8 +27,8 @@ const ProductOrder = () => {
             </div>
             <div className='cart-update'>
                 <Order cart={cart}>
-                <Link to={'/inventory'}>
-                        <button>Check Orders</button>
+                <Link to={'/shipment'}>
+                        <button>Process shipping</button>
                     </Link>
                 </Order>
             </div>

@@ -8,6 +8,9 @@
     7. npm install --save react-firebase-hooks
     8. useCreateUserWithEmailAndPassword from react firebase hooks
     9. user is true go to user choices page
+    10. useSignInWithEmailAndPassword for Login
+    11. create RequireAuth component ==> check user exist also tract user location
+    12. In route wrap protected component by using RequireAuth Component
 */
 
 /**
