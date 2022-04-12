@@ -1,22 +1,49 @@
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
-import React from 'react';
-import './Product.css';
+import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
+import useCart from '../../customHooks/useCart';
+import useProducts from '../../customHooks/useProducts';
+import { addToDb, getStoredCart } from '../../utilities/fakedb';
+import Cart from '../Cart/Cart';
+import Order from '../Order/Order';
+import './Product.css'
 
-const Product = ({ product, handleAddToCart}) => {
-// const Product = props => {
-    // const { product, handleAddToCart} = props;
-    const { name, seller, img, price, ratings } = product;
+const Product = () => {
+    const [products, setProducts] = useProducts();
+    const [cart, setCart] = useCart(products);
+
+
+    // handle added cart
+    const handleAddToCart = (selectedProduct) =>{
+        let newCart = [];
+        const exists = cart.find(product => product.id === selectedProduct.id);
+        if(!exists){
+            selectedProduct.quantity = 1;
+            newCart = [...cart, selectedProduct];
+        }
+        else{
+            const rest = cart.filter(product => product.id !== selectedProduct.id);
+            exists.quantity = exists.quantity + 1;
+            newCart = [...rest, exists];
+        }
+        
+        setCart(newCart);
+        addToDb(selectedProduct.id);
+    }
     return (
-        <div className='product-info'>
-            <img src={img} alt="" />
-            <div className='product-items'>
-            <h2>{name}</h2>
-            <h3>Price: {price}</h3>
-            <p>Manufacturer: {seller}</p>
-            <p>Patting: {ratings } start</p>
+        <div className='cart'>
+            <div className='cart-info'>
+                {
+                    products.map(product => <Cart products={product} handleAddedCart = {handleAddToCart} key={product.id}></Cart>)
+                }
+
             </div>
-            <button onClick={() => handleAddToCart(product)} className='add-button'>Add Card <FontAwesomeIcon icon={faShoppingCart}></FontAwesomeIcon></button>
+            <div className='cart-update'>
+                <Order cart={cart}>
+                    <Link to={'/product-order'}>
+                        <button>Review Orders</button>
+                    </Link>
+                </Order>
+            </div>
         </div>
     );
 };
